@@ -41,3 +41,43 @@ router.post("/api/register" , async(req, res) => {
         console.log(error );
     }
 })
+
+// login route
+
+router.post("/signin", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+  
+      if (!email || !password) {
+        return res.status(400).json({ error: "Please fill the credentials" });
+      }
+  
+      const userLogin = await User.findOne({ email: email });
+  
+  
+      if (userLogin) {
+        const isMatch = await bcrypt.compare(password, userLogin.password);
+  
+        const token = await userLogin.generateAuthToken();
+        
+  
+        res.cookie("jwttoken", token, {
+          expires: new Date(Date.now() + 25892000000),
+          httpOnly: true,
+        });
+  
+        if (!isMatch) {
+          res.status(400).json({ error: "Invalid Credentials" });
+        } else {
+          res.json({ message: "User Sign in Successfull" });
+        }
+      } else {
+        res.status(400).json({ error: "Invalid Credentials" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+
+  module.exports = router;
