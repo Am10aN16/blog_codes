@@ -1,13 +1,23 @@
 const mongoose = require("mongoose");
 const DB = process.env.DATABASE;
 
-mongoose
-  .connect(DB, {
-    useNewUrlParser: true,
-  })
-  .then(() => {
-    console.log(`Connection Success`);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+const dbconnection = async() => {
+  try {
+   await mongoose.connect(DB , {
+    
+   });
+   console.log(`Connection Success`);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+  // .then(() => {
+  //   console.log(`Connection Success`);
+  // })
+  // .catch((err) => {
+  //   console.log(err);
+  // });
+
+  module.exports = dbconnection;
